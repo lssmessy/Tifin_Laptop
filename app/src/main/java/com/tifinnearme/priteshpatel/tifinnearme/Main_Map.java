@@ -31,6 +31,7 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.tifinnearme.priteshpatel.tifinnearme.gps.GPSTracker;
 
 import java.io.IOException;
 import java.util.List;
@@ -55,11 +56,13 @@ public class Main_Map extends ActionBarActivity implements LocationListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_appbar);
         /*toolbar=(Toolbar)findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);*/
-        et = (EditText) findViewById(R.id.editText1);
+        /*EditText et=new EditText(getApplicationContext());
+        getActionBar().setCustomView(et);*/
+        et = (EditText) findViewById(R.id.search_loc);
         map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
 
         checkLocation();

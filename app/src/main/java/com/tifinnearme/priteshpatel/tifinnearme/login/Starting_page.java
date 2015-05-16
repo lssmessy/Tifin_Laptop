@@ -1,4 +1,4 @@
-package com.tifinnearme.priteshpatel.tifinnearme;
+package com.tifinnearme.priteshpatel.tifinnearme.login;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -20,6 +20,30 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.Toast;
+
+import com.tifinnearme.priteshpatel.tifinnearme.MainActivity;
+import com.tifinnearme.priteshpatel.tifinnearme.Main_Map;
+import com.tifinnearme.priteshpatel.tifinnearme.signup.SignUp_page;
+import com.tifinnearme.priteshpatel.tifinnearme.Webcall;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by PRITESH on 03-04-2015.
@@ -27,6 +51,8 @@ import android.widget.ScrollView;
 public class Starting_page extends ActionBarActivity{
     EditText username,password;
     Button login,signup,webcall;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +87,8 @@ public class Starting_page extends ActionBarActivity{
                     InputMethodManager imm=(InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(login.getWindowToken(),0);
                     new Login_background().execute();
+
+
                     /*Intent i = new Intent(Starting_page.this, MainActivity.class);
                     startActivity(i);*/
                 }
@@ -203,6 +231,9 @@ public class Starting_page extends ActionBarActivity{
     private class Login_background extends AsyncTask<Void,Void,Void>{
         ProgressDialog dialog;
         static final String p="MyLog";
+        boolean res=false;
+        String user="";
+
         @Override
         protected void onPreExecute() {
 
@@ -221,17 +252,49 @@ public class Starting_page extends ActionBarActivity{
         @Override
         protected Void doInBackground(Void... params) {
 
-            Intent i = new Intent(Starting_page.this, Main_Map.class);
+            String uname=username.getText().toString();
+            String pwd=password.getText().toString();
+            List<NameValuePair> data=new ArrayList<NameValuePair>();
 
-            try {
-                Thread.sleep(2000);
-                dialog.dismiss();
-                startActivity(i);
+            data.add(new BasicNameValuePair("username",uname));
+            data.add(new BasicNameValuePair("password",pwd));
 
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            Log.i(p,"doInBackground after 2 secs");
+
+            try{
+                HttpClient client=new DefaultHttpClient();
+                HttpPost post=new HttpPost("http://whtsnext.cuccfree.com/apis/validate_user.php");
+                post.setEntity(new UrlEncodedFormEntity(data));
+                HttpResponse response=client.execute(post);
+
+                if(response!=null){
+                    InputStream is=response.getEntity().getContent();
+                    BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(is));
+                    StringBuilder sb=new StringBuilder();
+                    String line=null;
+                    while((line=bufferedReader.readLine())!=null){
+
+                        sb.append(line+"\n");
+                    }
+                    //this.res=sb.toString();
+                    JSONObject jsonObject=new JSONObject(sb.toString());
+                    jsonObject.get("user_validated");
+                    if(jsonObject.get("user_validated")==true){
+                        this.res=true;
+
+                    }
+                    else if(jsonObject.get("user_validated")==false)
+                    {
+                        this.res=false;
+                    }
+                    this.user= jsonObject.getString("username");
+                }
+
+
+
+
+            }catch (Exception e){e.getMessage();}
+
+
             return null;
         }
 
@@ -240,8 +303,31 @@ public class Starting_page extends ActionBarActivity{
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            Log.i(p,"onPostExecute");
+            Log.i(p, "onPostExecute");
             dialog.dismiss();
+
+            AlertDialog.Builder aBuilder=new AlertDialog.Builder(Starting_page.this);
+            aBuilder.setTitle("Login");
+
+            if(res==true)
+                  aBuilder.setMessage("Welcome to tifin near me \'"+user+"\'");
+            else if(res==false)
+                aBuilder.setMessage("Username/Password is incorrect!");
+
+
+            aBuilder.setPositiveButton("Ok",new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    if(res==true)
+                    startActivity(new Intent(Starting_page.this, MainActivity.class));
+                    else
+                        return;
+                }
+            });
+            aBuilder.show();
+
+            //Toast.makeText(getApplicationContext(),res,Toast.LENGTH_LONG).show();
         }
 
         @Override

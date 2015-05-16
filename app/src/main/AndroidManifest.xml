@@ -26,6 +26,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/tifin"
         android:label="@string/app_name"
+
         android:theme="@style/AppTheme">
         <!--<meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -37,8 +38,9 @@
         <!--Laptop key-->
 
         <activity
-            android:name=".Starting_page"
-            android:label="@string/app_name">
+            android:name=".login.Starting_page"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -46,7 +48,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Customer_reg"
+            android:name=".signup.Customer_reg"
             android:label="Customer Registration">
             <intent-filter>
                 <action android:name="com.tifinnearme.priteshpatel.tifinnearme.Cutomer_reg" />
@@ -55,7 +57,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Tifinvala_reg"
+            android:name=".signup.Tifinvala_reg"
             android:label="Tifinvala Registration">
             <intent-filter>
                 <action android:name="com.tifinnearme.priteshpatel.tifinnearme.Tifinvala_reg" />
@@ -64,7 +66,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SignUp_page"
+            android:name=".signup.SignUp_page"
             android:label="Sign Up">
             <intent-filter>
                 <action android:name="com.tifinnearme.priteshpatel.tifinnearme.SignUp_page" />

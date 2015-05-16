@@ -1,4 +1,4 @@
-package com.tifinnearme.priteshpatel.tifinnearme;
+package com.tifinnearme.priteshpatel.tifinnearme.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.tifinnearme.priteshpatel.tifinnearme.DataList;
+import com.tifinnearme.priteshpatel.tifinnearme.R;
 
 import java.util.Collections;
 import java.util.List;
@@ -20,7 +23,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     private Context context;
     private LayoutInflater inflater;
     private ClikListener clikListener;
-    List<DataList> data= Collections.emptyList();//take care of the null objext reference
+    public List<DataList> data= Collections.emptyList();//take care of the null objext reference
 //get data from DataList class in the form of array
     public MyAdapter(Context context,List<DataList> data){
         this.context=context;

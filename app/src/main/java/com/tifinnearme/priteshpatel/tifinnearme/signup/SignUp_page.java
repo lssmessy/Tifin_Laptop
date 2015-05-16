@@ -1,4 +1,4 @@
-package com.tifinnearme.priteshpatel.tifinnearme;
+package com.tifinnearme.priteshpatel.tifinnearme.signup;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.tifinnearme.priteshpatel.tifinnearme.R;
 
 /**
  * Created by pritesh.patel on 03-04-15.
@@ -81,7 +83,7 @@ public class SignUp_page extends ActionBarActivity{
         customer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i=new Intent(SignUp_page.this,Customer_reg.class);
+                Intent i=new Intent(SignUp_page.this, Customer_reg.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(i);
             }

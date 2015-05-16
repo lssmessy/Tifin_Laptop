@@ -1,4 +1,4 @@
-package com.tifinnearme.priteshpatel.tifinnearme;
+package com.tifinnearme.priteshpatel.tifinnearme.fragments;
 
 
 import android.content.Context;
@@ -15,6 +15,19 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.tifinnearme.priteshpatel.tifinnearme.DataList;
+import com.tifinnearme.priteshpatel.tifinnearme.MainActivity;
+import com.tifinnearme.priteshpatel.tifinnearme.Main_Map;
+import com.tifinnearme.priteshpatel.tifinnearme.Map;
+import com.tifinnearme.priteshpatel.tifinnearme.adapters.MyAdapter;
+import com.tifinnearme.priteshpatel.tifinnearme.tifin_sections.Mytifins;
+import com.tifinnearme.priteshpatel.tifinnearme.tifin_sections.Notifications;
+import com.tifinnearme.priteshpatel.tifinnearme.tifin_sections.Profile;
+import com.tifinnearme.priteshpatel.tifinnearme.R;
+import com.tifinnearme.priteshpatel.tifinnearme.tifin_sections.Requests;
+import com.tifinnearme.priteshpatel.tifinnearme.tifin_sections.Search;
+import com.tifinnearme.priteshpatel.tifinnearme.Settings;
 
 import java.util.ArrayList;
 import java.util.List;

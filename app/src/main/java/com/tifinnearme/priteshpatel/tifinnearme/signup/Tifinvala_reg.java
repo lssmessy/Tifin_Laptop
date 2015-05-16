@@ -1,4 +1,4 @@
-package com.tifinnearme.priteshpatel.tifinnearme;
+package com.tifinnearme.priteshpatel.tifinnearme.signup;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -23,22 +23,23 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.tifinnearme.priteshpatel.tifinnearme.MainActivity;
+
 /**
  * Created by pritesh.patel on 02-04-15.
  */
-public class Customer_reg extends ActionBarActivity {
+public class Tifinvala_reg extends ActionBarActivity{
     EditText username,password,email,address,mobile;
     Button signup,back;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTitle("Customer Registration:");
+        setTitle("Tifinvala Registration:");
         //setContentView(R.layout.customer_reg);
         ScrollView scroll_view=new ScrollView(this);
-        scroll_view.setBackgroundColor(Color.parseColor("#FFCC99"));
-
+        scroll_view.setBackgroundColor(Color.parseColor("#0099FF"));
         RelativeLayout rl=new RelativeLayout(this);
-        rl.setBackgroundColor(Color.parseColor("#FFCC99"));
+        rl.setBackgroundColor(Color.parseColor("#0099FF"));
         rl.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -50,10 +51,11 @@ public class Customer_reg extends ActionBarActivity {
 
         //Edittext initialization
         username=new EditText(this);
-        username.setHint("Username");
+        username.setHint("Tifin service or Username");
         username.setId(1);
         username.setInputType(InputType.TYPE_CLASS_TEXT);
         username.setImeOptions(EditorInfo.IME_ACTION_NEXT);//To show next button on keypad
+
 
         password=new EditText(this);
         password.setHint("Password");
@@ -78,8 +80,9 @@ public class Customer_reg extends ActionBarActivity {
         mobile.setHint("Mobile Number");
         mobile.setId(5);
         mobile.setRawInputType(Configuration.KEYBOARD_12KEY);
-        mobile.setImeOptions(EditorInfo.IME_ACTION_SEND);//To show next button on keypad
         mobile.setImeActionLabel("Sign Up",EditorInfo.IME_ACTION_SEND);
+        mobile.setImeOptions(EditorInfo.IME_ACTION_SEND);//To show next button on keypad
+
         mobile.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -89,6 +92,7 @@ public class Customer_reg extends ActionBarActivity {
                 return true;
             }
         });
+
 
 
         //Button initialization
@@ -114,24 +118,26 @@ public class Customer_reg extends ActionBarActivity {
             public void onClick(View v) {
                 onBackClicked(v);
             }
-        });*/
-
+        });
+*/
         //Setting positions of sign up buttons
 
         RelativeLayout.LayoutParams signup_params=new RelativeLayout.LayoutParams
                 (RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-
+        //signup_params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        //signup_params.addRule(RelativeLayout.CENTER_HORIZONTAL);
         signup_params.addRule(RelativeLayout.BELOW,mobile.getId());
+        //signup_params.setMargins(20,0,0,300);
         signup_params.setMargins(50,30,0,0);
 
 
         //back button
 
-        /*RelativeLayout.LayoutParams back_params=new RelativeLayout.LayoutParams
+        RelativeLayout.LayoutParams back_params=new RelativeLayout.LayoutParams
                 (RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
         back_params.addRule(RelativeLayout.RIGHT_OF,signup.getId());
         back_params.addRule(RelativeLayout.BELOW, mobile.getId());
-        back_params.setMargins(50,30,0,0);*/
+        back_params.setMargins(50,30,0,0);
 
         //mobile text position
         RelativeLayout.LayoutParams mobile_params=new RelativeLayout.LayoutParams
@@ -182,47 +188,47 @@ public class Customer_reg extends ActionBarActivity {
         rl.addView(address,address_params);
         rl.addView(mobile,mobile_params);
         rl.addView(signup,signup_params);
-        //rl.addView(back,back_params);
+       // rl.addView(back,back_params);
 
         scroll_view.addView(rl);
         setContentView(scroll_view);
 
     }
 
-   /* public void onBackClicked(View view){
+    /*public void onBackClicked(View view){
         Intent i=new Intent(this,SignUp_page.class);
         startActivity(i);
+
     }*/
     public void onSignUp(View view){
         new LoadinBackGround().execute();
     }
-
-    public class LoadinBackGround extends AsyncTask<Void, Void, Void>{
+    public class LoadinBackGround extends AsyncTask<Void, Void, Void> {
         ProgressDialog dialog;
         static final String p="MyLog";
         @Override
         protected void onPreExecute() {
 
             super.onPreExecute();
-            dialog=new ProgressDialog(Customer_reg.this);
+            dialog=new ProgressDialog(Tifinvala_reg.this);
             dialog.setMessage("Loading map...");
             dialog.setTitle("Getting locations");
             dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             dialog.show();
 
-            Log.i(p,"onPreExecute");
+            Log.i(p, "onPreExecute");
         }
 
 
         @Override
         protected Void doInBackground(Void... params) {
 
-            Intent i=new Intent(Customer_reg.this,MainActivity.class);
+            Intent i=new Intent(Tifinvala_reg.this,MainActivity.class);
 
             try {
                 Thread.sleep(2000);
                 dialog.dismiss();
-                 startActivity(i);
+                startActivity(i);
 
             } catch (InterruptedException e) {
                 e.printStackTrace();

@@ -16,6 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.tifinnearme.priteshpatel.tifinnearme.fragments.NavigationFragment;
+
 
 public class MainActivity extends ActionBarActivity {
     public static Toolbar toolbar;
@@ -45,6 +47,7 @@ public class MainActivity extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
         return true;
     }
 
@@ -61,7 +64,9 @@ public class MainActivity extends ActionBarActivity {
         }
         if(id==R.id.navigate)
         {
-            startActivity(new Intent(this,Subactivity.class));
+            //startActivity(new Intent(this,Main_Map.class));
+            Main_Map mapview=new Main_Map();
+            mapview.checkLocation();
         }
 
         return super.onOptionsItemSelected(item);

@@ -7,10 +7,19 @@
         android:title="@string/action_settings"
         android:orderInCategory="100"
         app:showAsAction="never" />
+    <!--<item
+        app:layout="@layout/search_field"
+        android:id="@+id/search"
+        android:orderInCategory="100"
+        android:showAsAction="ifRoom"
+        android:title="edittext"
+        tools:ignore="AppCompatResource"></item>-->
     <item
         android:id="@+id/navigate"
-        android:icon="@drawable/arrow_right"
+        android:icon="@drawable/magnify"
         android:orderInCategory="200"
         android:title="@string/next"
+
         app:showAsAction="ifRoom" />
+
 </menu>

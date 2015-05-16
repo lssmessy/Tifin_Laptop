@@ -5,6 +5,6 @@ package com.tifinnearme.priteshpatel.tifinnearme;
  */
 //This class brings data for the list situated on left
 public class DataList {
-    int iconId;
-    String iconName;
+    public int iconId;
+    public String iconName;
 }
