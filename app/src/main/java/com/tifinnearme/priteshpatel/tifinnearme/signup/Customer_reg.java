@@ -1,7 +1,9 @@
 package com.tifinnearme.priteshpatel.tifinnearme.signup;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -26,6 +28,7 @@ import android.widget.Toast;
 
 import com.tifinnearme.priteshpatel.tifinnearme.MainActivity;
 import com.tifinnearme.priteshpatel.tifinnearme.R;
+import com.tifinnearme.priteshpatel.tifinnearme.api_links.API_LINKS;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -34,6 +37,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -214,6 +218,7 @@ public class Customer_reg extends ActionBarActivity {
     }*/
     public void onSignUp(View view){
         new LoadinBackGround().execute();
+
     }
 
     public class LoadinBackGround extends AsyncTask<Void, Void, Void>{
@@ -221,6 +226,7 @@ public class Customer_reg extends ActionBarActivity {
         static final String p="MyLog";
         boolean res=false;
         String user="";
+        String errors="";
 
         @Override
         protected void onPreExecute() {
@@ -253,7 +259,7 @@ public class Customer_reg extends ActionBarActivity {
 
             try{
                 HttpClient client=new DefaultHttpClient();
-                HttpPost post=new HttpPost("http://whtsnext.cuccfree.com/apis/new_register.php");
+                HttpPost post=new HttpPost(API_LINKS.URL_LINK+API_LINKS.NEW_USER);
                 post.setEntity(new UrlEncodedFormEntity(data));
                 HttpResponse response=client.execute(post);
 
@@ -268,13 +274,15 @@ public class Customer_reg extends ActionBarActivity {
                     }
                     //this.res=sb.toString();
                     JSONObject jsonObject=new JSONObject(sb.toString());
-                    jsonObject.get("user_registered");
-                    this.user= String.valueOf(jsonObject.get("user_data"));
-                    if(jsonObject.get("user_registered")==true){
+                    //jsonObject.get("user_registered");
+                    //this.user= String.valueOf(jsonObject.get("user_data"));
+                    this.errors=jsonObject.getString("errors");
+
+                    if(jsonObject.get("is_errors")==false){
                         this.res=true;
 
                     }
-                    else if(jsonObject.get("user_registered")==false)
+                    else if(jsonObject.get("is_errors")==true)
                     {
                         this.res=false;
                     }
@@ -297,10 +305,27 @@ public class Customer_reg extends ActionBarActivity {
             super.onPostExecute(aVoid);
             Log.i(p,"onPostExecute");
             dialog.dismiss();
+            AlertDialog.Builder aBuilder=new AlertDialog.Builder(Customer_reg.this);
+            aBuilder.setTitle("Login");
+
             if(res==true)
-            Toast.makeText(Customer_reg.this,"Registered successfully",Toast.LENGTH_LONG).show();
-            else
-                Toast.makeText(Customer_reg.this,"Failed to register",Toast.LENGTH_LONG).show();
+                aBuilder.setMessage("Welcome to tifin near me!");
+            else if(res==false)
+                aBuilder.setMessage("Errors: \n"+errors);
+
+
+            aBuilder.setPositiveButton("Ok",new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    if(res==true)
+                        startActivity(new Intent(Customer_reg.this, MainActivity.class));
+                    else
+                        return;
+                }
+            });
+            aBuilder.show();
+
         }
 
         @Override

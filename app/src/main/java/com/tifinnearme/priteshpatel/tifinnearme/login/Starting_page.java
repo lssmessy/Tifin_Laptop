@@ -24,8 +24,10 @@ import android.widget.Toast;
 
 import com.tifinnearme.priteshpatel.tifinnearme.MainActivity;
 import com.tifinnearme.priteshpatel.tifinnearme.Main_Map;
+import com.tifinnearme.priteshpatel.tifinnearme.api_links.API_LINKS;
 import com.tifinnearme.priteshpatel.tifinnearme.signup.SignUp_page;
 import com.tifinnearme.priteshpatel.tifinnearme.Webcall;
+
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -262,7 +264,7 @@ public class Starting_page extends ActionBarActivity{
 
             try{
                 HttpClient client=new DefaultHttpClient();
-                HttpPost post=new HttpPost("http://whtsnext.cuccfree.com/apis/validate_user.php");
+                HttpPost post=new HttpPost(API_LINKS.URL_LINK+API_LINKS.CHECK_USER);
                 post.setEntity(new UrlEncodedFormEntity(data));
                 HttpResponse response=client.execute(post);
 

@@ -28,13 +28,13 @@
         android:label="@string/app_name"
 
         android:theme="@style/AppTheme">
-        <!--<meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCa7GPXboqCgjGLm8hp7a_UhEqGRgBXPAY"/>-->
-        <!--Office key-->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCo1SkZ9HKthYGy5uZedd8rwrOWo48Jibc" />
+            android:value="AIzaSyCa7GPXboqCgjGLm8hp7a_UhEqGRgBXPAY"/>
+        <!--Office key-->
+        <!--<meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCo1SkZ9HKthYGy5uZedd8rwrOWo48Jibc" />-->
         <!--Laptop key-->
 
         <activity
