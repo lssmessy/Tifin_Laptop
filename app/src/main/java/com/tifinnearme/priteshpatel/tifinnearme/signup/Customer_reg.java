@@ -22,9 +22,25 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tifinnearme.priteshpatel.tifinnearme.MainActivity;
 import com.tifinnearme.priteshpatel.tifinnearme.R;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by pritesh.patel on 02-04-15.
@@ -203,6 +219,9 @@ public class Customer_reg extends ActionBarActivity {
     public class LoadinBackGround extends AsyncTask<Void, Void, Void>{
         ProgressDialog dialog;
         static final String p="MyLog";
+        boolean res=false;
+        String user="";
+
         @Override
         protected void onPreExecute() {
 
@@ -220,17 +239,54 @@ public class Customer_reg extends ActionBarActivity {
         @Override
         protected Void doInBackground(Void... params) {
 
-            Intent i=new Intent(Customer_reg.this,MainActivity.class);
+            String uname=username.getText().toString();
+            String pwd=password.getText().toString();
+            List<NameValuePair> data=new ArrayList<NameValuePair>();
 
-            try {
-                Thread.sleep(2000);
-                dialog.dismiss();
-                 startActivity(i);
+            data.add(new BasicNameValuePair("username",uname));
+            data.add(new BasicNameValuePair("password",pwd));
+            data.add(new BasicNameValuePair("email",email.getText().toString()));
+            data.add(new BasicNameValuePair("address",address.getText().toString()));
+            data.add(new BasicNameValuePair("mobile",mobile.getText().toString()));
 
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            Log.i(p,"doInBackground after 2 secs");
+
+
+            try{
+                HttpClient client=new DefaultHttpClient();
+                HttpPost post=new HttpPost("http://whtsnext.cuccfree.com/apis/new_register.php");
+                post.setEntity(new UrlEncodedFormEntity(data));
+                HttpResponse response=client.execute(post);
+
+                if(response!=null){
+                    InputStream is=response.getEntity().getContent();
+                    BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(is));
+                    StringBuilder sb=new StringBuilder();
+                    String line=null;
+                    while((line=bufferedReader.readLine())!=null){
+
+                        sb.append(line+"\n");
+                    }
+                    //this.res=sb.toString();
+                    JSONObject jsonObject=new JSONObject(sb.toString());
+                    jsonObject.get("user_registered");
+                    this.user= String.valueOf(jsonObject.get("user_data"));
+                    if(jsonObject.get("user_registered")==true){
+                        this.res=true;
+
+                    }
+                    else if(jsonObject.get("user_registered")==false)
+                    {
+                        this.res=false;
+                    }
+
+                }
+
+
+
+
+            }catch (Exception e){e.getMessage();}
+
+
             return null;
         }
 
@@ -241,6 +297,10 @@ public class Customer_reg extends ActionBarActivity {
             super.onPostExecute(aVoid);
             Log.i(p,"onPostExecute");
             dialog.dismiss();
+            if(res==true)
+            Toast.makeText(Customer_reg.this,"Registered successfully",Toast.LENGTH_LONG).show();
+            else
+                Toast.makeText(Customer_reg.this,"Failed to register",Toast.LENGTH_LONG).show();
         }
 
         @Override
