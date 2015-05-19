@@ -107,6 +107,7 @@ public class Starting_page extends ActionBarActivity{
 
                 Intent i=new Intent(Starting_page.this,SignUp_page.class);
                 startActivity(i);
+                finish();
             }
         });
 
@@ -118,6 +119,7 @@ public class Starting_page extends ActionBarActivity{
             public void onClick(View v) {
                 Intent i=new Intent(Starting_page.this,Webcall.class);
                 startActivity(i);
+                finish();
             }
         });
 
@@ -321,8 +323,10 @@ public class Starting_page extends ActionBarActivity{
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
-                    if(res==true)
-                    startActivity(new Intent(Starting_page.this, MainActivity.class));
+                    if(res==true) {
+                        startActivity(new Intent(Starting_page.this, MainActivity.class));
+                        finish();
+                    }
                     else
                         return;
                 }

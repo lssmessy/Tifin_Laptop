@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.util.Log;
 import android.util.TypedValue;
@@ -24,10 +25,8 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.tifinnearme.priteshpatel.tifinnearme.MainActivity;
-import com.tifinnearme.priteshpatel.tifinnearme.R;
 import com.tifinnearme.priteshpatel.tifinnearme.api_links.API_LINKS;
 
 import org.apache.http.HttpResponse;
@@ -37,7 +36,6 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -103,6 +101,9 @@ public class Customer_reg extends ActionBarActivity {
         mobile.setRawInputType(Configuration.KEYBOARD_12KEY);
         mobile.setImeOptions(EditorInfo.IME_ACTION_SEND);//To show next button on keypad
         mobile.setImeActionLabel("Sign Up",EditorInfo.IME_ACTION_SEND);
+        InputFilter[] inputFilter=new InputFilter[1];
+        inputFilter[0]=new InputFilter.LengthFilter(10);
+        mobile.setFilters(inputFilter);
         mobile.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -222,7 +223,7 @@ public class Customer_reg extends ActionBarActivity {
     }
 
     public class LoadinBackGround extends AsyncTask<Void, Void, Void>{
-        ProgressDialog dialog;
+        ProgressDialog dialog,dialog2;
         static final String p="MyLog";
         boolean res=false;
         String user="";
@@ -233,9 +234,15 @@ public class Customer_reg extends ActionBarActivity {
 
             super.onPreExecute();
             dialog=new ProgressDialog(Customer_reg.this);
-            dialog.setMessage("Loading map...");
-            dialog.setTitle("Getting locations");
+            dialog.setMessage("Registering...");
+            dialog.setTitle("Sign up");
             dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+
+            dialog2=new ProgressDialog(Customer_reg.this);
+            dialog2.setMessage("Redirecting...");
+            dialog2.setTitle("Login");
+            dialog2.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+
             dialog.show();
 
             Log.i(p,"onPreExecute");
@@ -248,7 +255,7 @@ public class Customer_reg extends ActionBarActivity {
             String uname=username.getText().toString();
             String pwd=password.getText().toString();
             List<NameValuePair> data=new ArrayList<NameValuePair>();
-
+            data.add(new BasicNameValuePair("type","customer"));
             data.add(new BasicNameValuePair("username",uname));
             data.add(new BasicNameValuePair("password",pwd));
             data.add(new BasicNameValuePair("email",email.getText().toString()));
@@ -309,22 +316,25 @@ public class Customer_reg extends ActionBarActivity {
             aBuilder.setTitle("Login");
 
             if(res==true)
-                aBuilder.setMessage("Welcome to tifin near me!");
-            else if(res==false)
-                aBuilder.setMessage("Errors: \n"+errors);
+            {
+                dialog2.show();
+                startActivity(new Intent(Customer_reg.this, MainActivity.class));
+                dialog2.dismiss();
+                finish();
+            }
+            else if(res==false) {
+                aBuilder.setMessage("Errors: \n" + errors);
 
 
-            aBuilder.setPositiveButton("Ok",new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                    if(res==true)
-                        startActivity(new Intent(Customer_reg.this, MainActivity.class));
-                    else
-                        return;
-                }
-            });
-            aBuilder.show();
+                aBuilder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+
+                    }
+                });
+                aBuilder.show();
+            }
 
         }
 

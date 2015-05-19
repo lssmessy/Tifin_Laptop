@@ -72,6 +72,7 @@ public class SignUp_page extends ActionBarActivity{
                 Intent i=new Intent(SignUp_page.this,Tifinvala_reg.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(i);
+
             }
         });
 
@@ -86,6 +87,7 @@ public class SignUp_page extends ActionBarActivity{
                 Intent i=new Intent(SignUp_page.this, Customer_reg.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(i);
+
             }
         });
 

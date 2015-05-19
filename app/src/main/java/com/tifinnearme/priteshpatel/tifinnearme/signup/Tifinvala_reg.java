@@ -1,7 +1,9 @@
 package com.tifinnearme.priteshpatel.tifinnearme.signup;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -9,6 +11,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.util.Log;
 import android.util.TypedValue;
@@ -24,12 +27,28 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.tifinnearme.priteshpatel.tifinnearme.MainActivity;
+import com.tifinnearme.priteshpatel.tifinnearme.api_links.API_LINKS;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by pritesh.patel on 02-04-15.
  */
 public class Tifinvala_reg extends ActionBarActivity{
-    EditText username,password,email,address,mobile;
+    EditText username,password,email,address,mobile,full_name;
     Button signup,back;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +101,9 @@ public class Tifinvala_reg extends ActionBarActivity{
         mobile.setRawInputType(Configuration.KEYBOARD_12KEY);
         mobile.setImeActionLabel("Sign Up",EditorInfo.IME_ACTION_SEND);
         mobile.setImeOptions(EditorInfo.IME_ACTION_SEND);//To show next button on keypad
-
+        InputFilter[] inputFilter=new InputFilter[1];
+        inputFilter[0]=new InputFilter.LengthFilter(10);
+        mobile.setFilters(inputFilter);
         mobile.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -203,37 +224,87 @@ public class Tifinvala_reg extends ActionBarActivity{
     public void onSignUp(View view){
         new LoadinBackGround().execute();
     }
-    public class LoadinBackGround extends AsyncTask<Void, Void, Void> {
-        ProgressDialog dialog;
+    public class LoadinBackGround extends AsyncTask<Void, Void, Void>{
+        ProgressDialog dialog,dialog2;
         static final String p="MyLog";
+        boolean res=false;
+        String user="";
+        String errors="";
+
         @Override
         protected void onPreExecute() {
 
             super.onPreExecute();
             dialog=new ProgressDialog(Tifinvala_reg.this);
-            dialog.setMessage("Loading map...");
-            dialog.setTitle("Getting locations");
+            dialog.setMessage("Registering...");
+            dialog.setTitle("Sign up");
             dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+
+            dialog2=new ProgressDialog(Tifinvala_reg.this);
+            dialog2.setMessage("Redirecting...");
+            dialog2.setTitle("Login");
+            dialog2.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+
             dialog.show();
 
-            Log.i(p, "onPreExecute");
+            Log.i(p,"onPreExecute");
         }
 
 
         @Override
         protected Void doInBackground(Void... params) {
 
-            Intent i=new Intent(Tifinvala_reg.this,MainActivity.class);
+            String uname=username.getText().toString();
+            String pwd=password.getText().toString();
+            List<NameValuePair> data=new ArrayList<NameValuePair>();
 
-            try {
-                Thread.sleep(2000);
-                dialog.dismiss();
-                startActivity(i);
+            data.add(new BasicNameValuePair("type","tifinvala"));
+            data.add(new BasicNameValuePair("username",uname));
+            data.add(new BasicNameValuePair("password",pwd));
+            data.add(new BasicNameValuePair("email",email.getText().toString()));
+            data.add(new BasicNameValuePair("address",address.getText().toString()));
+            data.add(new BasicNameValuePair("mobile",mobile.getText().toString()));
 
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            Log.i(p,"doInBackground after 2 secs");
+
+
+            try{
+                HttpClient client=new DefaultHttpClient();
+                HttpPost post=new HttpPost(API_LINKS.URL_LINK+API_LINKS.NEW_USER);
+                post.setEntity(new UrlEncodedFormEntity(data));
+                HttpResponse response=client.execute(post);
+
+                if(response!=null){
+                    InputStream is=response.getEntity().getContent();
+                    BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(is));
+                    StringBuilder sb=new StringBuilder();
+                    String line=null;
+                    while((line=bufferedReader.readLine())!=null){
+
+                        sb.append(line+"\n");
+                    }
+                    //this.res=sb.toString();
+                    JSONObject jsonObject=new JSONObject(sb.toString());
+                    //jsonObject.get("user_registered");
+                    //this.user= String.valueOf(jsonObject.get("user_data"));
+                    this.errors=jsonObject.getString("errors");
+
+                    if(jsonObject.get("is_errors")==false){
+                        this.res=true;
+
+                    }
+                    else if(jsonObject.get("is_errors")==true)
+                    {
+                        this.res=false;
+                    }
+
+                }
+
+
+
+
+            }catch (Exception e){e.getMessage();}
+
+
             return null;
         }
 
@@ -244,6 +315,30 @@ public class Tifinvala_reg extends ActionBarActivity{
             super.onPostExecute(aVoid);
             Log.i(p,"onPostExecute");
             dialog.dismiss();
+            AlertDialog.Builder aBuilder=new AlertDialog.Builder(Tifinvala_reg.this);
+            aBuilder.setTitle("Login");
+
+            if(res==true)
+            {
+                dialog2.show();
+                startActivity(new Intent(Tifinvala_reg.this, MainActivity.class));
+                dialog2.dismiss();
+                finish();
+            }
+            else if(res==false) {
+                aBuilder.setMessage("Errors: \n" + errors);
+
+
+                aBuilder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+
+                    }
+                });
+                aBuilder.show();
+            }
+
         }
 
         @Override
