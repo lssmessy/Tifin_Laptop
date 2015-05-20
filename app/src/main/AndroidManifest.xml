@@ -55,7 +55,7 @@
         </receiver>
         <service android:name=".pushnotifications.GcmIntentService" />
 
-        <activity
+        <!--<activity
             android:name=".pushnotifications.DemoActivity"
             android:label="DemoActivity"
             android:screenOrientation="portrait">
@@ -64,9 +64,9 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
+        </activity>-->
 
-        <!--<activity
+        <activity
             android:name=".login.Starting_page"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
@@ -75,7 +75,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>-->
+        </activity>
         <activity
             android:name=".signup.Customer_reg"
             android:label="Customer Registration">

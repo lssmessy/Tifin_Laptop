@@ -288,11 +288,11 @@ public class Tifinvala_reg extends ActionBarActivity{
                     //this.user= String.valueOf(jsonObject.get("user_data"));
                     this.errors=jsonObject.getString("errors");
 
-                    if(jsonObject.get("is_errors")==false){
+                    if(errors.contains("none")){
                         this.res=true;
 
                     }
-                    else if(jsonObject.get("is_errors")==true)
+                    else
                     {
                         this.res=false;
                     }
