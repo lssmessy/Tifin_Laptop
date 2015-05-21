@@ -5,11 +5,13 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -50,6 +52,7 @@ import java.util.List;
 public class Customer_reg extends ActionBarActivity {
     EditText username,password,email,address,mobile;
     Button signup,back;
+    String activation_code="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -284,9 +287,13 @@ public class Customer_reg extends ActionBarActivity {
                     //jsonObject.get("user_registered");
                     //this.user= String.valueOf(jsonObject.get("user_data"));
                     this.errors=jsonObject.getString("errors");
-
+                    activation_code=jsonObject.getString("activation_code");
                     if(errors.contains("none")){
                         this.res=true;
+                        SharedPreferences preferences=PreferenceManager.getDefaultSharedPreferences(Customer_reg.this);
+                        SharedPreferences.Editor editor=preferences.edit();
+                        editor.putString("username",uname);
+                        editor.apply();
 
                     }
                     else
@@ -313,14 +320,23 @@ public class Customer_reg extends ActionBarActivity {
             Log.i(p,"onPostExecute");
             dialog.dismiss();
             AlertDialog.Builder aBuilder=new AlertDialog.Builder(Customer_reg.this);
-            aBuilder.setTitle("Login");
+            aBuilder.setTitle("Activation code");
 
             if(res==true)
             {
-                dialog2.show();
-                startActivity(new Intent(Customer_reg.this, MainActivity.class));
-                dialog2.dismiss();
-                finish();
+
+                aBuilder.setMessage("Your activation code is :\n " + activation_code);
+                aBuilder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        startActivity(new Intent(Customer_reg.this,Activation_page.class));
+                        finish();
+
+                    }
+                });
+                aBuilder.show();
+
             }
             else if(res==false) {
                 aBuilder.setMessage("Errors: \n" + errors);
